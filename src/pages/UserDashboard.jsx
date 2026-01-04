@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/auth";
 import api from "../services/api";
 
 const UserDashboard = () => {
@@ -9,6 +10,7 @@ const UserDashboard = () => {
     const [user, setUser] = useState(null);
     const [submissions, setSubmissions] = useState([]);
     const navigate = useNavigate();
+    const authContext = useAuth();
 
     useEffect(() => {
         fetchUserData();
@@ -39,11 +41,10 @@ const UserDashboard = () => {
 
     const handleLogout = async () => {
         try {
-            await api.post("/auth/logout");
+            await authContext.logout();
             navigate("/");
-            window.location.reload();
-        } catch {
-            console.error("Logout failed");
+        } catch (error) {
+            console.error("Logout failed:", error);
         }
     };
 
