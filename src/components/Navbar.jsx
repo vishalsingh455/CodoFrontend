@@ -17,11 +17,11 @@ const Navbar = () => {
 
     const handleLogout = async () => {
         try {
-            await api.post('/auth/logout');
+            await authContext.logout();
+            setIsMenuOpen(false); // Close mobile menu
             navigate('/');
-            window.location.reload();
-        } catch {
-            console.error('Logout failed');
+        } catch (error) {
+            console.error('Logout failed:', error);
         }
     };
 
