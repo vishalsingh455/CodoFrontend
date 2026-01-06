@@ -37,7 +37,7 @@ const OrganizerDashboard = () => {
 
     const getCompetitionStatus = (startTime, endTime) => {
         if (!startTime || !endTime) return { text: 'Not Scheduled', color: 'text-gray-400' };
-        
+
         const now = new Date();
         const start = new Date(startTime);
         const end = new Date(endTime);

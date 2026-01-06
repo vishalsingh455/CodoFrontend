@@ -8,9 +8,11 @@ const AddTestCase = () => {
     const [problems, setProblems] = useState([]);
     const [selectedProblemId, setSelectedProblemId] = useState("");
 
-    const [input, setInput] = useState("");
-    const [expectedOutput, setExpectedOutput] = useState("");
+    const [input, setInput] = useState("{}");
+    const [expectedOutput, setExpectedOutput] = useState("{}");
     const [isHidden, setIsHidden] = useState(false);
+    const [inputError, setInputError] = useState("");
+    const [outputError, setOutputError] = useState("");
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -38,22 +40,39 @@ const AddTestCase = () => {
         e.preventDefault();
         setError("");
         setSuccess("");
+        setInputError("");
+        setOutputError("");
 
-        if (!selectedProblemId || !input || !expectedOutput) {
-            setError("All fields are required");
+        if (!selectedProblemId) {
+            setError("Please select a problem");
+            return;
+        }
+
+        let parsedInput, parsedOutput;
+        try {
+            parsedInput = JSON.parse(input);
+        } catch (err) {
+            setInputError("Invalid JSON format for input");
+            return;
+        }
+
+        try {
+            parsedOutput = JSON.parse(expectedOutput);
+        } catch (err) {
+            setOutputError("Invalid JSON format for expected output");
             return;
         }
 
         try {
             setLoading(true);
             await api.post(`/problems/${selectedProblemId}/testcases`, {
-                input,
-                expectedOutput,
+                input: parsedInput,
+                expectedOutput: parsedOutput,
                 isHidden
             });
             setSuccess("Test case added successfully");
-            setInput("");
-            setExpectedOutput("");
+            setInput("{}");
+            setExpectedOutput("{}");
             setIsHidden(false);
         } catch (err) {
             setError(err.response?.data?.message || "Failed to add test case");
@@ -92,27 +111,33 @@ const AddTestCase = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">
-                            Input
+                            Input Arguments (JSON)
                         </label>
                         <textarea
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            rows={4}
-                            placeholder="Input"
-                            className="w-full px-4 py-2 rounded bg-gray-800 text-white"
+                            rows={6}
+                            placeholder={`{"nums": [2, 7, 11, 15], "target": 9}`}
+                            className="w-full px-4 py-2 rounded bg-gray-800 text-white font-mono text-sm"
                         />
+                        {inputError && (
+                            <p className="text-red-400 text-xs mt-1">{inputError}</p>
+                        )}
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">
-                            Expected Output
+                            Expected Return Value (JSON)
                         </label>
                         <textarea
                             value={expectedOutput}
                             onChange={(e) => setExpectedOutput(e.target.value)}
-                            rows={4}
-                            placeholder="Expected Output"
-                            className="w-full px-4 py-2 rounded bg-gray-800 text-white"
+                            rows={6}
+                            placeholder={`true`}
+                            className="w-full px-4 py-2 rounded bg-gray-800 text-white font-mono text-sm"
                         />
+                        {outputError && (
+                            <p className="text-red-400 text-xs mt-1">{outputError}</p>
+                        )}
                     </div>
                 </div>
 

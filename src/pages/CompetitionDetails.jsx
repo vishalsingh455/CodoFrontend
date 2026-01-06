@@ -203,11 +203,10 @@ const CompetitionDetails = () => {
                                                 {problem.title}
                                             </h3>
                                             <div className="flex items-center gap-2">
-                                                <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                                    problem.difficulty === 'easy' ? 'bg-green-600/20 text-green-400' :
-                                                    problem.difficulty === 'medium' ? 'bg-yellow-600/20 text-yellow-400' :
-                                                    'bg-red-600/20 text-red-400'
-                                                }`}>
+                                                <span className={`px-2 py-1 rounded text-xs font-medium ${problem.difficulty === 'easy' ? 'bg-green-600/20 text-green-400' :
+                                                        problem.difficulty === 'medium' ? 'bg-yellow-600/20 text-yellow-400' :
+                                                            'bg-red-600/20 text-red-400'
+                                                    }`}>
                                                     {problem.difficulty}
                                                 </span>
                                                 <span className={`px-2 py-1 rounded text-xs font-medium ${statusColor} bg-gray-900/40`}>
@@ -216,7 +215,7 @@ const CompetitionDetails = () => {
                                             </div>
                                         </div>
                                         <p className="text-gray-400 text-sm mt-2 line-clamp-2">
-                                            {problem.statement.substring(0, 100)}...
+                                            {problem.description ? problem.description.substring(0, 100) + '...' : 'No description available'}
                                         </p>
                                         <div className="mt-3 text-sm text-gray-300">
                                             <span className="font-medium text-white">

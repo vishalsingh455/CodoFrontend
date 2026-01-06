@@ -11,17 +11,18 @@ const Navbar = () => {
     // Get authentication context (user info, loading state)
     const authContext = useAuth();
     const user = authContext?.user; // Current logged-in user data
+    const userName = authContext?.userName;
     const loading = authContext?.loading; // Whether authentication is still loading
     const navigate = useNavigate(); // Function to navigate to different pages
     const [isMenuOpen, setIsMenuOpen] = useState(false); // State for mobile menu open/closed
 
     const handleLogout = async () => {
         try {
-            await authContext.logout();
-            setIsMenuOpen(false); // Close mobile menu
+            await api.post('/auth/logout');
             navigate('/');
-        } catch (error) {
-            console.error('Logout failed:', error);
+            window.location.reload();
+        } catch {
+            console.error('Logout failed');
         }
     };
 
@@ -114,7 +115,7 @@ const Navbar = () => {
                                             className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200 bg-gray-800/50 hover:bg-gray-700/50 rounded-lg"
                                         >
                                             <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                                                {user.name?.charAt(0)?.toUpperCase() || 'U'}
+                                                {userName?.charAt(0)?.toUpperCase() || 'U'}
                                             </div>
                                             <span className="hidden lg:block">{user.name}</span>
                                             <svg className={`w-4 h-4 transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,7 +126,7 @@ const Navbar = () => {
                                         {isMenuOpen && (
                                             <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-1 z-50">
                                                 <div className="px-4 py-2 text-sm text-gray-400 border-b border-gray-700">
-                                                    Signed in as <span className="text-white font-medium">{user.name}</span>
+                                                    Signed in as <span className="text-white font-medium">{userName}</span>
                                                 </div>
                                                 <button
                                                     onClick={handleLogout}
@@ -196,7 +197,7 @@ const Navbar = () => {
                                 </Link>
                                 <div className="border-t border-gray-600 pt-2 mt-2">
                                     <div className="px-3 py-2 text-sm text-gray-400">
-                                        Signed in as <span className="text-white font-medium">{user.name}</span>
+                                        Signed in as <span className="text-white font-medium">{userName}</span>
                                     </div>
                                     <button
                                         onClick={handleLogout}

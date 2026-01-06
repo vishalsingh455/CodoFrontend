@@ -13,7 +13,7 @@ const JoinCompetition = () => {
         e.preventDefault();
         setError('');
         setSuccess('');
-        
+
         if (!roomCode.trim()) {
             setError('Room code is required');
             return;
@@ -21,11 +21,11 @@ const JoinCompetition = () => {
 
         try {
             setLoading(true);
-            
+
             const response = await api.post('/competitions/join', {
                 roomCode: roomCode.trim()
             });
-            
+
             setSuccess('Successfully joined the competition!');
             setTimeout(() => {
                 navigate(`/competitions/${response.data.competitionId}`);
@@ -95,7 +95,7 @@ const JoinCompetition = () => {
                 <div className="mt-6 text-center">
                     <p className="text-gray-500 text-sm">
                         Don't have a room code?{' '}
-                        <button 
+                        <button
                             onClick={() => navigate('/organizer')}
                             className="text-indigo-400 hover:text-indigo-300 font-medium"
                         >

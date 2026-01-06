@@ -5,12 +5,15 @@ import { AuthContext } from "./auth";
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [userName, setUserName] = useState("");
 
     const checkAuth = async () => {
         try {
             const res = await axiosInstance.get("/user/dashboard");
             if (res.status === 200) {
-                setUser(res.data.user || { authenticated: true });
+                setUser({ authenticated: true });
+                //console.log(res)
+                setUserName(res.data.user.name)
             } else {
                 setUser(null);
             }
@@ -25,7 +28,8 @@ const AuthProvider = ({ children }) => {
         try {
             const res = await axiosInstance.get("/user/dashboard");
             if (res.status === 200) {
-                setUser(res.data.user || { authenticated: true });
+                setUser({ authenticated: true });
+                setUserName(res.data.user.name)
             } else {
                 setUser(null);
             }
@@ -34,25 +38,12 @@ const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = async () => {
-        try {
-            await axiosInstance.post('/auth/logout');
-            setUser(null);
-            setLoading(false);
-        } catch (error) {
-            console.error('Logout failed:', error);
-            // Even if API fails, clear local state
-            setUser(null);
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
         checkAuth();
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, loading, refreshUser, logout }}>
+        <AuthContext.Provider value={{ user, loading, refreshUser, userName }}>
             {children}
         </AuthContext.Provider>
     );

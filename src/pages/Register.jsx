@@ -20,7 +20,7 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            await api.post("/auth/register", {name, email, password });
+            await api.post("/auth/register", { name, email, password });
             await api.post("/auth/login", { email, password });
             await refreshUser();
             navigate('/dashboard', { replace: true });

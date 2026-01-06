@@ -13,11 +13,11 @@ const Leaderboard = () => {
         const fetchLeaderboard = async () => {
             try {
                 setLoading(true);
-                
+
                 // Get competition details
                 const compRes = await api.get(`/competitions/${competitionId}`);
                 setCompetition(compRes.data.competition);
-                
+
                 // Get leaderboard
                 const leaderboardRes = await api.get(`/competitions/${competitionId}/leaderboard`);
                 setLeaderboard(leaderboardRes.data.leaderboard || []);
@@ -66,7 +66,7 @@ const Leaderboard = () => {
                 {/* Leaderboard Table */}
                 <div className="bg-gray-900 rounded-xl p-6">
                     <h2 className="text-2xl font-bold text-white mb-6">Leaderboard</h2>
-                    
+
                     {leaderboard.length > 0 ? (
                         <div className="overflow-x-auto">
                             <table className="w-full">
@@ -83,12 +83,11 @@ const Leaderboard = () => {
                                         <tr key={entry.userId} className="border-b border-gray-800 hover:bg-gray-800/50 transition">
                                             <td className="py-4">
                                                 <div className="flex items-center">
-                                                    <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                                                        index === 0 ? 'bg-yellow-600/20 text-yellow-400' :
-                                                        index === 1 ? 'bg-gray-600/20 text-gray-400' :
-                                                        index === 2 ? 'bg-orange-600/20 text-orange-400' :
-                                                        'bg-gray-700 text-gray-300'
-                                                    }`}>
+                                                    <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${index === 0 ? 'bg-yellow-600/20 text-yellow-400' :
+                                                            index === 1 ? 'bg-gray-600/20 text-gray-400' :
+                                                                index === 2 ? 'bg-orange-600/20 text-orange-400' :
+                                                                    'bg-gray-700 text-gray-300'
+                                                        }`}>
                                                         {index + 1}
                                                     </span>
                                                 </div>
@@ -100,7 +99,7 @@ const Leaderboard = () => {
                                             </td>
                                             <td className="py-4 text-right">
                                                 <span className="text-white font-bold text-lg">
-                                                    {entry.totalScore}
+                                                    {`${entry.totalScore}`}
                                                 </span>
                                             </td>
                                             <td className="py-4 text-gray-400 text-sm">

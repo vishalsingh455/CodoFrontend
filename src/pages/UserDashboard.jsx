@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/auth";
 import api from "../services/api";
 
 const UserDashboard = () => {
@@ -10,7 +9,6 @@ const UserDashboard = () => {
     const [user, setUser] = useState(null);
     const [submissions, setSubmissions] = useState([]);
     const navigate = useNavigate();
-    const authContext = useAuth();
 
     useEffect(() => {
         fetchUserData();
@@ -29,7 +27,7 @@ const UserDashboard = () => {
             setLoading(false);
         }
     };
-    
+
     const fetchMySubmissions = async () => {
         try {
             const res = await api.get("/my-submissions");
@@ -41,10 +39,11 @@ const UserDashboard = () => {
 
     const handleLogout = async () => {
         try {
-            await authContext.logout();
+            await api.post("/auth/logout");
             navigate("/");
-        } catch (error) {
-            console.error("Logout failed:", error);
+            window.location.reload();
+        } catch {
+            console.error("Logout failed");
         }
     };
 
@@ -230,57 +229,57 @@ const UserDashboard = () => {
                                     return now >= start && now <= end; // Active competitions only
                                 })
                                 .map((competition) => {
-                                const status = getCompetitionStatus(competition.startTime, competition.endTime);
-                                return (
-                                    <div
-                                        key={competition._id}
-                                        className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 hover:border-indigo-600 transition group"
-                                    >
-                                        <div className="flex justify-between items-start mb-3">
-                                            <h4 className="text-xl font-semibold text-white group-hover:text-indigo-400 transition">
-                                                {competition.title}
-                                            </h4>
-                                            <span className={`text-xs font-medium px-2 py-1 rounded ${status.color} bg-gray-900/50`}>
-                                                {status.text}
-                                            </span>
-                                        </div>
-
-                                        <p className="text-gray-400 text-sm mb-4 line-clamp-2">
-                                            {competition.description || "No description"}
-                                        </p>
-
-                                        <div className="space-y-2 mb-4 text-sm">
-                                            <div className="flex items-center gap-2 text-gray-400">
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                <span>Starts: {formatDate(competition.startTime)}</span>
+                                    const status = getCompetitionStatus(competition.startTime, competition.endTime);
+                                    return (
+                                        <div
+                                            key={competition._id}
+                                            className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 hover:border-indigo-600 transition group"
+                                        >
+                                            <div className="flex justify-between items-start mb-3">
+                                                <h4 className="text-xl font-semibold text-white group-hover:text-indigo-400 transition">
+                                                    {competition.title}
+                                                </h4>
+                                                <span className={`text-xs font-medium px-2 py-1 rounded ${status.color} bg-gray-900/50`}>
+                                                    {status.text}
+                                                </span>
                                             </div>
-                                            <div className="flex items-center gap-2 text-gray-400">
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                <span>Ends: {formatDate(competition.endTime)}</span>
+
+                                            <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                                                {competition.description || "No description"}
+                                            </p>
+
+                                            <div className="space-y-2 mb-4 text-sm">
+                                                <div className="flex items-center gap-2 text-gray-400">
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <span>Starts: {formatDate(competition.startTime)}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-gray-400">
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <span>Ends: {formatDate(competition.endTime)}</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex gap-2">
+                                                <Link
+                                                    to={`/competitions/${competition._id}`}
+                                                    className="flex-1 text-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition"
+                                                >
+                                                    View Problems
+                                                </Link>
+                                                <Link
+                                                    to={`/competitions/${competition._id}/leaderboard`}
+                                                    className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition"
+                                                >
+                                                    Leaderboard
+                                                </Link>
                                             </div>
                                         </div>
-
-                                        <div className="flex gap-2">
-                                            <Link
-                                                to={`/competitions/${competition._id}`}
-                                                className="flex-1 text-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition"
-                                            >
-                                                View Problems
-                                            </Link>
-                                            <Link
-                                                to={`/competitions/${competition._id}/leaderboard`}
-                                                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition"
-                                            >
-                                                Leaderboard
-                                            </Link>
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
                         </div>
                     )}
                 </div>
