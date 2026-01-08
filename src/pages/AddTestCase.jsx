@@ -8,8 +8,8 @@ const AddTestCase = () => {
     const [problems, setProblems] = useState([]);
     const [selectedProblemId, setSelectedProblemId] = useState("");
 
-    const [input, setInput] = useState("{}");
-    const [expectedOutput, setExpectedOutput] = useState("{}");
+    const [input, setInput] = useState("");
+    const [expectedOutput, setExpectedOutput] = useState("");
     const [isHidden, setIsHidden] = useState(false);
     const [inputError, setInputError] = useState("");
     const [outputError, setOutputError] = useState("");
