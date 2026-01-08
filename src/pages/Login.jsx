@@ -37,7 +37,7 @@ const Login = () => {
                 handleLogin(e)
             }} className="bg-gray-900 p-8 rounded-xl w-96 shadow-xl">
                 <h2 className="text-2xl text-white font-bold mb-6 text-center">
-                    Login to CodeArena
+                    Login to Codo
                 </h2>
 
                 <input

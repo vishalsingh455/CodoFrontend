@@ -530,7 +530,7 @@ const SolveProblem = () => {
                             />
                         )}
                         {/* Debug: Show raw competition data */}
-                        {console.log('Problem competition data:', problem.competition)}
+                        //{console.log('Problem competition data:', problem.competition)}
                     </div>
 
                     {/* Controls Row */}
@@ -593,7 +593,7 @@ const SolveProblem = () => {
                         </div>
 
                         {/* Function Signature */}
-                        <div className="mb-6">
+                        {/* <div className="mb-6">
                             <h3 className="text-lg font-bold text-white mb-4">Function Signature</h3>
                             <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800">
                                 <code className="text-indigo-400 font-mono text-sm">
@@ -602,7 +602,7 @@ const SolveProblem = () => {
                                     ).join('') || ''})
                                 </code>
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* Constraints */}
                         {problem.constraints && (
@@ -623,13 +623,13 @@ const SolveProblem = () => {
                                         <div key={index} className="bg-gray-900/50 rounded-lg p-4 border border-gray-800">
                                             <div className="grid grid-cols-1 gap-4">
                                                 <div>
-                                                    <h4 className="font-medium text-gray-400 mb-2 text-sm">Input Arguments</h4>
+                                                    <h4 className="font-medium text-gray-400 mb-2 text-sm">Input</h4>
                                                     <pre className="bg-gray-900 p-3 rounded text-sm text-indigo-300 font-mono whitespace-pre-wrap border border-gray-700 overflow-x-auto">
                                                         {JSON.stringify(testCase.input, null, 2)}
                                                     </pre>
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-medium text-gray-400 mb-2 text-sm">Expected Return Value</h4>
+                                                    <h4 className="font-medium text-gray-400 mb-2 text-sm">Expected Output</h4>
                                                     <pre className="bg-gray-900 p-3 rounded text-sm text-green-300 font-mono whitespace-pre-wrap border border-gray-700 overflow-x-auto">
                                                         {JSON.stringify(testCase.expectedOutput, null, 2)}
                                                     </pre>

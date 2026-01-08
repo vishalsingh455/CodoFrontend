@@ -37,7 +37,7 @@ const Register = () => {
                 handleRegister(e)
             }} className="bg-gray-900 p-8 rounded-xl w-96 shadow-xl">
                 <h2 className="text-2xl text-white font-bold mb-6 text-center">
-                    Register to CodeArena
+                    Register to Codo
                 </h2>
 
                 <input
