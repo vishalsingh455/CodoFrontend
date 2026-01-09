@@ -26,6 +26,7 @@ const Login = () => {
     }, [loading, user, navigate]);
 
     const handleLogin = async (e) => {
+        
         try {
             e.preventDefault();
             await api.post("/auth/login", { email, password });
@@ -67,7 +68,7 @@ const Login = () => {
         }
     };
 
-    
+
     const handleResetPassword = async (e) => {
         e.preventDefault();
         setForgotPasswordError("");
