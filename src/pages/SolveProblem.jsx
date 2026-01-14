@@ -391,6 +391,8 @@ const SolveProblem = () => {
     const [activeTab, setActiveTab] = useState('editor');//mm
     const [leftWidth, setLeftWidth] = useState(50); // %
     const [isResizing, setIsResizing] = useState(false);
+    const [analysisResult, setAnalysisResult] = useState(null);
+    const [analyzing, setAnalyzing] = useState(false);
 
 
     const fetchProblemDetails = useCallback(async () => {
@@ -486,6 +488,29 @@ const SolveProblem = () => {
         }
     };
 
+    const analyzeCode = async () => {
+        try {
+            setAnalyzing(true);
+            setAnalysisResult(null);
+
+            const response = await api.post('/ai/analyze-complexity', {
+                language,
+                code
+            });
+
+            if (response.data.success) {
+                setAnalysisResult(response.data.result);
+            } else {
+                setMessage(`❌ Analysis failed: ${response.data.message}`);
+            }
+
+        } catch (error) {
+            setMessage(`❌ Analysis failed: ${error.response?.data?.message || error.message}`);
+        } finally {
+            setAnalyzing(false);
+        }
+    };
+
 
 
     const getDifficultyColor = (difficulty) => {
@@ -530,7 +555,7 @@ const SolveProblem = () => {
                             />
                         )}
                         {/* Debug: Show raw competition data */}
-                        //{console.log('Problem competition data:', problem.competition)}
+                        {console.log('Problem competition data:', problem.competition)}
                     </div>
 
                     {/* Controls Row */}
@@ -568,6 +593,13 @@ const SolveProblem = () => {
                             >
                                 {loading ? "Submitting..." : "Submit Code"}
                             </button>
+                            <button
+                                onClick={analyzeCode}
+                                disabled={analyzing}
+                                className="bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 disabled:cursor-not-allowed px-6 py-2 rounded text-white font-semibold transition whitespace-nowrap"
+                            >
+                                {analyzing ? "Analyzing..." : "Analyze Complexity"}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -578,93 +610,25 @@ const SolveProblem = () => {
                         </p>
                     </div>
                 )}
+
+
             </div>
 
             {/* Main Content */}
             <div className="flex h-[calc(100vh-80px)]">
-                {/* Left Panel - Problem Details */}
-                <div className="border-r border-gray-800 overflow-y-auto no-scrollbar"
-                    style={{ width: `${leftWidth}%` }}>
-                    <div className="p-6">
-                        {/* Problem Description */}
-                        <div className="mb-6">
-                            <h2 className="text-xl font-bold text-white mb-4">Problem Description</h2>
-                            <p className="text-gray-300 leading-relaxed">{problem.description}</p>
-                        </div>
-
-                        {/* Function Signature */}
-                        {/* <div className="mb-6">
-                            <h3 className="text-lg font-bold text-white mb-4">Function Signature</h3>
-                            <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800">
-                                <code className="text-indigo-400 font-mono text-sm">
-                                    {problem.returnType} {problem.functionName}({problem.parameters?.map((param, idx) =>
-                                        `${param.type} ${param.name}${idx < (problem.parameters?.length || 0) - 1 ? ', ' : ''}`
-                                    ).join('') || ''})
-                                </code>
-                            </div>
-                        </div> */}
-
-                        {/* Constraints */}
-                        {problem.constraints && (
-                            <div className="mb-6">
-                                <h3 className="text-lg font-bold text-white mb-4">Constraints</h3>
-                                <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800">
-                                    <p className="text-gray-300 text-sm">{problem.constraints}</p>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Sample Test Cases */}
-                        <div className="mb-6">
-                            <h3 className="text-xl font-bold text-white mb-4">Sample Test Cases</h3>
-                            {testCases.length > 0 ? (
-                                <div className="space-y-4">
-                                    {testCases.map((testCase, index) => (
-                                        <div key={index} className="bg-gray-900/50 rounded-lg p-4 border border-gray-800">
-                                            <div className="grid grid-cols-1 gap-4">
-                                                <div>
-                                                    <h4 className="font-medium text-gray-400 mb-2 text-sm">Input</h4>
-                                                    <pre className="bg-gray-900 p-3 rounded text-sm text-indigo-300 font-mono whitespace-pre-wrap border border-gray-700 overflow-x-auto">
-                                                        {JSON.stringify(testCase.input, null, 2)}
-                                                    </pre>
-                                                </div>
-                                                <div>
-                                                    <h4 className="font-medium text-gray-400 mb-2 text-sm">Expected Output</h4>
-                                                    <pre className="bg-gray-900 p-3 rounded text-sm text-green-300 font-mono whitespace-pre-wrap border border-gray-700 overflow-x-auto">
-                                                        {JSON.stringify(testCase.expectedOutput, null, 2)}
-                                                    </pre>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p className="text-gray-400 text-center py-4">No sample test cases available</p>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                <div
-                    onMouseDown={() => setIsResizing(true)}
-                    className="w-1 cursor-col-resize bg-gray-800 hover:bg-indigo-500 transition"
-                    style={{ userSelect: "none" }}
-                />
-
-
-                {/* Right Panel - Tabs */}
+                {/* Left Panel - Tabs */}
                 <div className="flex flex-col min-h-0"
-                    style={{ width: `${100 - leftWidth}%` }}>
+                    style={{ width: `${leftWidth}%` }}>
                     {/* Tabs */}
                     <div className="flex border-b border-gray-800 bg-gray-900/50">
                         <button
-                            onClick={() => setActiveTab('editor')}
-                            className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${activeTab === 'editor'
+                            onClick={() => setActiveTab('problem')}
+                            className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${activeTab === 'problem'
                                 ? 'text-white bg-gray-800 border-b-2 border-indigo-500'
                                 : 'text-gray-400 hover:text-gray-300 hover:bg-gray-800/50'
                                 }`}
                         >
-                            Code Editor
+                            Problem Description
                         </button>
                         <button
                             onClick={() => setActiveTab('submissions')}
@@ -675,24 +639,72 @@ const SolveProblem = () => {
                         >
                             Submissions
                         </button>
+                        <button
+                            onClick={() => setActiveTab('analysis')}
+                            className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${activeTab === 'analysis'
+                                ? 'text-white bg-gray-800 border-b-2 border-purple-500'
+                                : 'text-gray-400 hover:text-gray-300 hover:bg-gray-800/50'
+                                }`}
+                        >
+                            Analysis
+                        </button>
                     </div>
 
                     {/* Tab Content */}
-                    <div className="flex-1 min-h-0">
-                        {activeTab === 'editor' ? (
-                            <div className="h-full p-4">
-                                <CodeEditor
-                                    language={language === "cpp" ? "cpp" : language}
-                                    code={code}
-                                    setCode={setCode}
-                                />
+                    <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar">
+                        {activeTab === 'problem' ? (
+                            <div className="p-6">
+                                {/* Problem Description */}
+                                <div className="mb-6">
+                                    <h2 className="text-xl font-bold text-white mb-4">Problem Description</h2>
+                                    <p className="text-gray-300 leading-relaxed">{problem.description}</p>
+                                </div>
+
+                                {/* Constraints */}
+                                {problem.constraints && (
+                                    <div className="mb-6">
+                                        <h3 className="text-lg font-bold text-white mb-4">Constraints</h3>
+                                        <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800">
+                                            <p className="text-gray-300 text-sm">{problem.constraints}</p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Sample Test Cases */}
+                                <div className="mb-6">
+                                    <h3 className="text-xl font-bold text-white mb-4">Sample Test Cases</h3>
+                                    {testCases.length > 0 ? (
+                                        <div className="space-y-4">
+                                            {testCases.map((testCase, index) => (
+                                                <div key={index} className="bg-gray-900/50 rounded-lg p-4 border border-gray-800">
+                                                    <div className="grid grid-cols-1 gap-4">
+                                                        <div>
+                                                            <h4 className="font-medium text-gray-400 mb-2 text-sm">Input</h4>
+                                                            <pre className="bg-gray-900 p-3 rounded text-sm text-indigo-300 font-mono whitespace-pre-wrap border border-gray-700 overflow-x-auto">
+                                                                {JSON.stringify(testCase.input, null, 2)}
+                                                            </pre>
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="font-medium text-gray-400 mb-2 text-sm">Expected Output</h4>
+                                                            <pre className="bg-gray-900 p-3 rounded text-sm text-green-300 font-mono whitespace-pre-wrap border border-gray-700 overflow-x-auto">
+                                                                {JSON.stringify(testCase.expectedOutput, null, 2)}
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-gray-400 text-center py-4">No sample test cases available</p>
+                                    )}
+                                </div>
                             </div>
-                        ) : (
+                        ) : activeTab === 'submissions' ? (
                             <div className="h-full bg-gray-900/30">
                                 {/* Submission History */}
-                                <div className="h-full overflow-y-auto">
+                                <div className="h-full overflow-y-auto no-scrollbar">
                                     {submissions.length > 0 ? (
-                                        <div className="h-full overflow-y-auto  no-scrollbar">
+                                        <div className="h-full overflow-y-auto no-scrollbar">
                                             {submissions
                                                 .filter(sub => sub.problem._id === problemId)
                                                 .slice(0, 10)
@@ -744,7 +756,7 @@ const SolveProblem = () => {
                                                                         </div>
                                                                     </div>
                                                                     <div className="p-3">
-                                                                        <div className="bg-red-900/20 border border-red-800/30 rounded text-xs font-mono text-red-300 p-2 max-h-24 overflow-y-auto overflow-x-auto  no-scrollbar whitespace-pre-wrap break-words">
+                                                                        <div className="bg-red-900/20 border border-red-800/30 rounded text-xs font-mono text-red-300 p-2 max-h-24 overflow-y-auto overflow-x-auto no-scrollbar whitespace-pre-wrap break-words">
                                                                             {submission.error}
                                                                         </div>
                                                                     </div>
@@ -765,7 +777,75 @@ const SolveProblem = () => {
                                     )}
                                 </div>
                             </div>
-                        )}
+                        ) : activeTab === 'analysis' ? (
+                            <div className="h-full bg-gray-900/30 p-6">
+                                {analysisResult ? (
+                                    <div className="max-w-4xl mx-auto">
+                                        <h3 className="text-2xl font-bold text-white mb-6">Code Analysis</h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                                                <div className="text-purple-300 text-sm font-medium mb-2">Time Complexity</div>
+                                                <div className="text-white text-2xl font-bold">{analysisResult.time_complexity}</div>
+                                            </div>
+                                            <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                                                <div className="text-purple-300 text-sm font-medium mb-2">Space Complexity</div>
+                                                <div className="text-white text-2xl font-bold">{analysisResult.space_complexity}</div>
+                                            </div>
+                                            <div className="bg-gray-800 p-6 rounded-lg border border-gray-700 md:col-span-2">
+                                                <div className="text-purple-300 text-sm font-medium mb-3">Explanation</div>
+                                                <div className="text-gray-300 text-base leading-relaxed">{analysisResult.explanation}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-center h-full">
+                                        <div className="text-center">
+                                            <div className="text-gray-500 text-lg mb-2">No analysis yet</div>
+                                            <div className="text-gray-600 text-sm mb-4">Click "Analyze Complexity" to get AI-powered code analysis</div>
+                                            <button
+                                                onClick={analyzeCode}
+                                                disabled={analyzing}
+                                                className="bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 disabled:cursor-not-allowed px-6 py-2 rounded text-white font-semibold transition"
+                                            >
+                                                {analyzing ? "Analyzing..." : "Analyze Complexity"}
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ) : activeTab === 'code' ? (
+                            <div className="p-6">
+                                {/* Function Signature */}
+                                <div className="mb-6">
+                                    <h3 className="text-lg font-bold text-white mb-4">Function Signature</h3>
+                                    <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800">
+                                        <code className="text-indigo-400 font-mono text-sm">
+                                            {problem.returnType} {problem.functionName}({problem.parameters?.map((param, idx) =>
+                                                `${param.type} ${param.name}${idx < (problem.parameters?.length || 0) - 1 ? ', ' : ''}`
+                                            ).join('') || ''})
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : null}
+                    </div>
+                </div>
+
+                <div
+                    onMouseDown={() => setIsResizing(true)}
+                    className="w-1 cursor-col-resize bg-gray-800 hover:bg-indigo-500 transition"
+                    style={{ userSelect: "none" }}
+                />
+
+                {/* Right Panel - Code Editor */}
+                <div className="border-l border-gray-800"
+                    style={{ width: `${100 - leftWidth}%` }}>
+                    <div className="h-full p-4">
+                        <CodeEditor
+                            language={language === "cpp" ? "cpp" : language}
+                            code={code}
+                            setCode={setCode}
+                        />
                     </div>
                 </div>
             </div>
