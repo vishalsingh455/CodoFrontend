@@ -522,6 +522,22 @@ const SolveProblem = () => {
         }
     };
 
+    const sanitizeJavaScriptCode = (code, problem) => {
+        if (!problem) return code;
+
+        // If function already has JS-style signature, do nothing
+        if (/function\s+\w+\s*\(.*\)/.test(code)) {
+            return code.replace(/\b(number|string|boolean)\s+/g, '');
+        }
+
+        // Build JS-style function signature
+        const params = problem.parameters?.map(p => p.name).join(', ') || '';
+
+        return `function ${problem.functionName}(${params}) {
+    // write your code here
+}
+`;
+    };
     if (!problem) {
         return (
             <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -842,8 +858,15 @@ const SolveProblem = () => {
                     style={{ width: `${100 - leftWidth}%` }}>
                     <div className="h-full p-4">
                         <CodeEditor
+                            // language={language === "cpp" ? "cpp" : language}
+                            // code={code}
+                            // setCode={setCode}
                             language={language === "cpp" ? "cpp" : language}
-                            code={code}
+                            code={
+                                language === "javascript"
+                                    ? sanitizeJavaScriptCode(code, problem)
+                                    : code
+                            }
                             setCode={setCode}
                         />
                     </div>
