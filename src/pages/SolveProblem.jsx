@@ -439,6 +439,10 @@ const SolveProblem = () => {
             window.removeEventListener("mouseup", handleMouseUp);
         };
     }, [isResizing]);
+    useEffect(() => {
+      setActiveTab('problem');
+    }, [])
+    
 
 
     const runCode = async () => {
@@ -571,7 +575,7 @@ const SolveProblem = () => {
                             />
                         )}
                         {/* Debug: Show raw competition data */}
-                        {console.log('Problem competition data:', problem.competition)}
+                        //{console.log('Problem competition data:', problem.competition)}
                     </div>
 
                     {/* Controls Row */}
