@@ -612,13 +612,13 @@ const SolveProblem = () => {
                             >
                                 {loading ? "Submitting..." : "Submit Code"}
                             </button>
-                            <button
+                            {/* <button
                                 onClick={analyzeCode}
                                 disabled={analyzing}
                                 className="bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 disabled:cursor-not-allowed px-6 py-2 rounded text-white font-semibold transition whitespace-nowrap"
                             >
                                 {analyzing ? "Analyzing..." : "Analyze Complexity"}
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                 </div>
