@@ -27,14 +27,14 @@ const CompetitionTimer = ({ startTime, endTime, className = "" }) => {
                 }
 
                 // Debug logging (remove after fixing)
-                console.log('Timer Debug:', {
-                    now: new Date(now).toISOString(),
-                    start: new Date(start).toISOString(),
-                    end: new Date(end).toISOString(),
-                    startTime,
-                    endTime,
-                    comparison: { nowVsStart: now >= start, nowVsEnd: now <= end }
-                });
+                // console.log('Timer Debug:', {
+                //     now: new Date(now).toISOString(),
+                //     start: new Date(start).toISOString(),
+                //     end: new Date(end).toISOString(),
+                //     startTime,
+                //     endTime,
+                //     comparison: { nowVsStart: now >= start, nowVsEnd: now <= end }
+                // });
 
                 if (now < start) {
                     // Competition hasn't started yet
