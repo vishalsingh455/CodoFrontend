@@ -819,6 +819,13 @@ const SolveProblem = () => {
                                                 <div className="text-gray-300 text-base leading-relaxed">{analysisResult.explanation}</div>
                                             </div>
                                         </div>
+                                                <button
+                                                    onClick={analyzeCode}
+                                                    disabled={analyzing}
+                                                    className="bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 disabled:cursor-not-allowed px-6 py-2 rounded text-white font-semibold transition whitespace-nowrap ml-4 mt-10"
+                                                >
+                                                    {analyzing ? "Analyzing..." : "Analyze Complexity"}
+                                                </button>
                                     </div>
                                 ) : (
                                     <div className="flex items-center justify-center h-full">
