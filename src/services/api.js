@@ -15,7 +15,7 @@ import axios from "axios";
 
 // This will automatically look for the variable you just saved in Vercel!
 const api = axios.create({
-    baseURL: process.env.REACT_APP_API_URL || process.env.VITE_API_URL || "http://16.171.200.174:3000",
+    baseURL: process.env.REACT_APP_API_URL || process.env.VITE_API_URL || "https://emote-patchy-payroll.ngrok-free.dev",
     withCredentials: true,
     headers: {
         "Content-Type": "application/json"
