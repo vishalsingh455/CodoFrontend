@@ -18,7 +18,8 @@ const api = axios.create({
     baseURL: process.env.REACT_APP_API_URL || process.env.VITE_API_URL || "https://emote-patchy-payroll.ngrok-free.dev",
     withCredentials: true,
     headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true"
     }
 });
 
