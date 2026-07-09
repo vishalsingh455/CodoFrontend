@@ -11,15 +11,27 @@
 // export default api;
 
 
+// import axios from "axios";
+
+// // This will automatically look for the variable you just saved in Vercel!
+// const api = axios.create({
+//     baseURL: process.env.REACT_APP_API_URL || process.env.VITE_API_URL || "https://emote-patchy-payroll.ngrok-free.dev",
+//     withCredentials: true,
+//     headers: {
+//         "Content-Type": "application/json",
+//         "ngrok-skip-browser-warning": "true"
+//     }
+// });
+
+// export default api;
+
 import axios from "axios";
 
-// This will automatically look for the variable you just saved in Vercel!
 const api = axios.create({
-    baseURL: process.env.REACT_APP_API_URL || process.env.VITE_API_URL || "https://emote-patchy-payroll.ngrok-free.dev",
+    baseURL: "/api",
     withCredentials: true,
     headers: {
-        "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": "true"
+        "Content-Type": "application/json"
     }
 });
 
