@@ -255,6 +255,8 @@ const Analytics = () => {
                 .row-hover { transition: background-color .2s ease, transform .2s ease; }
                 .row-hover:hover { transform: translateX(2px); }
                 .anim-bar { animation: growBar 1s cubic-bezier(.16,1,.3,1) both; }
+                .no-scrollbar::-webkit-scrollbar { display: none; }
+                .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
                 @media (prefers-reduced-motion: reduce) {
                     .anim-fade-up, .anim-fade-in, .anim-float-a, .anim-float-b, .bg-grid, .stat-card, .row-hover, .anim-bar { animation: none !important; transition: none !important; }
                 }
@@ -347,7 +349,7 @@ const Analytics = () => {
                         Problem Stats
                     </h2>
                     {analytics.problemStats.length > 0 ? (
-                        <div className="overflow-x-auto">
+                        <div className="overflow-x-auto no-scrollbar">
                             <table className="w-full border-separate border-spacing-y-1">
                                 <thead>
                                     <tr className="text-left">
