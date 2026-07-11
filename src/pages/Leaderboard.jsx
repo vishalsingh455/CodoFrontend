@@ -254,6 +254,8 @@ const Leaderboard = () => {
                 .anim-shimmer-gold { animation: shimmerGold 2.2s ease-in-out infinite; }
                 .row-hover { transition: background-color .2s ease, transform .2s ease; }
                 .row-hover:hover { transform: translateX(2px); }
+                .no-scrollbar::-webkit-scrollbar { display: none; }
+                .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
                 @media (prefers-reduced-motion: reduce) {
                     .anim-fade-up, .anim-fade-in, .anim-podium, .anim-float-a, .anim-float-b, .bg-grid, .anim-shimmer-gold, .row-hover { animation: none !important; transition: none !important; }
                 }
@@ -277,13 +279,9 @@ const Leaderboard = () => {
                             </div>
                         </div>
                         <div>
-                            
-                            <h1 className="text-3xl font-bold text-white mb-1">
-                                {competition?.title || 'Leaderboard'}
+                            <h1 className="text-3xl font-bold text-white">
+                                {competition?.title ? `${competition.title} Leaderboard` : 'Leaderboard'}
                             </h1>
-                            <p className="text-gray-500">
-                                {competition?.description || 'Competition Leaderboard'}
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -323,7 +321,7 @@ const Leaderboard = () => {
                                 </div>
                             )}
 
-                            <div className="overflow-x-auto">
+                            <div className="overflow-x-auto no-scrollbar">
                                 <table className="w-full border-separate border-spacing-y-1">
                                     <thead>
                                         <tr className="text-left">
