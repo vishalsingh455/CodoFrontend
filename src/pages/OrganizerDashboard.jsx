@@ -370,7 +370,7 @@ const OrganizerDashboard = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
                 {/* Welcome Section */}
                 <div className="mb-8 anim-fade-up">
-                    <p className="font-mono-ui text-[11px] text-violet-400/80 tracking-wider mb-1">$ organizer/dashboard</p>
+                    
                     <h2 className="text-3xl text-white font-bold mb-1 flex items-center gap-2">
                         Organizer Dashboard
                     </h2>
