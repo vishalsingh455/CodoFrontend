@@ -275,8 +275,8 @@ const LANGS = [
     { l: "JS", c: "from-yellow-400/20 text-yellow-300 border-yellow-400/30" },
     { l: "PY", c: "from-blue-400/20 text-blue-300 border-blue-400/30" },
     { l: "C++", c: "from-pink-400/20 text-pink-300 border-pink-400/30" },
-    { l: "GO", c: "from-cyan-400/20 text-cyan-300 border-cyan-400/30" },
-    { l: "RS", c: "from-orange-400/20 text-orange-300 border-orange-400/30" },
+    { l: "C", c: "from-cyan-400/20 text-cyan-300 border-cyan-400/30" },
+    { l: "JAVA", c: "from-orange-400/20 text-orange-300 border-orange-400/30" },
 ];
 
 const Login = () => {
