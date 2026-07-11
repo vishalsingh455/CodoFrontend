@@ -295,6 +295,17 @@ const OrganizerDashboard = () => {
         return { text: 'Live', color: 'text-green-400' };
     };
 
+    // --- Dynamic Calculation Helper (No Backend Changes Needed) ---
+    const getTotalUniqueParticipants = () => {
+        const uniqueUsers = new Set();
+        competitions.forEach(comp => {
+            if (Array.isArray(comp.registeredUsers)) {
+                comp.registeredUsers.forEach(userId => uniqueUsers.add(userId));
+            }
+        });
+        return uniqueUsers.size;
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-[#0A0D14] flex items-center justify-center relative">
@@ -428,7 +439,7 @@ const OrganizerDashboard = () => {
                             </div>
                             <div>
                                 <p className="text-gray-500 text-sm">Total Participants</p>
-                                <p className="text-3xl font-bold text-white font-mono-ui">0</p>
+                                <p className="text-3xl font-bold text-white font-mono-ui">getTotalUniqueParticipants() || 0</p>
                             </div>
                         </div>
                     </div>
