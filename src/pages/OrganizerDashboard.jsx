@@ -439,7 +439,7 @@ const OrganizerDashboard = () => {
                             </div>
                             <div>
                                 <p className="text-gray-500 text-sm">Total Participants</p>
-                                <p className="text-3xl font-bold text-white font-mono-ui">getTotalUniqueParticipants() || 0</p>
+                                <p className="text-3xl font-bold text-white font-mono-ui">{getTotalUniqueParticipants() || 0}</p>
                             </div>
                         </div>
                     </div>
