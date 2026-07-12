@@ -1366,10 +1366,18 @@ const clearCodeDraft = (problemId, lang) => {
 // until the verdict ("accepted"/"rejected") is ready.
 const POLL_INTERVAL_MS = 1500;
 
-const statusMessage = (submission) => {
+// queuePosition: number of jobs ahead of this one (0 = up next), or
+// null/undefined if not tracked (job already started/finished).
+const statusMessage = (submission, queuePosition) => {
     switch (submission.status) {
-        case "queued":
+        case "queued": {
+            if (queuePosition !== null && queuePosition !== undefined) {
+                return queuePosition === 0
+                    ? "⏳ Queued for evaluation... you're next!"
+                    : `⏳ Queued for evaluation... ${queuePosition} submission${queuePosition === 1 ? '' : 's'} ahead of you`;
+            }
             return "⏳ Queued for evaluation... waiting for the judge";
+        }
         case "processing":
             return "⏳ Running your code against test cases...";
         case "accepted":
@@ -1526,8 +1534,9 @@ const SolveProblem = () => {
             try {
                 const res = await api.get(`/submission/${submissionId}`);
                 const submission = res.data.submission;
+                const queuePosition = res.data.queuePosition;
 
-                setMessage(statusMessage(submission));
+                setMessage(statusMessage(submission, queuePosition));
 
                 const isFinal = submission.status === "accepted" || submission.status === "rejected";
                 if (isFinal) {
@@ -1806,13 +1815,12 @@ const SolveProblem = () => {
                 </div>
                 {message && (
                     <div className="max-w-7xl mx-auto mt-4 anim-fade-up">
-                        <div className={`flex items-center gap-2.5 justify-center text-center p-3 rounded-lg w-fit mx-auto text-sm font-medium border ${
-                            message.includes('✅')
+                        <div className={`flex items-center gap-2.5 justify-center text-center p-3 rounded-lg w-fit mx-auto text-sm font-medium border ${message.includes('✅')
                                 ? 'bg-green-900/20 text-green-300 border-green-700/50'
                                 : message.includes('⏳')
                                     ? 'bg-indigo-900/20 text-indigo-300 border-indigo-700/50'
                                     : 'bg-red-900/20 text-red-300 border-red-700/50'
-                        }`}>
+                            }`}>
                             {message.includes('✅') ? (
                                 <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             ) : message.includes('⏳') ? (
