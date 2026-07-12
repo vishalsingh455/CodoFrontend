@@ -18,6 +18,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import AuthProvider from './context/AuthContext'
 import AddTestCase from './pages/AddTestCase'
 import Analytics from './pages/Analytics'
+import ReportBug from './pages/ReportBug'
 
 function App() {
   return (
@@ -85,6 +86,10 @@ function App() {
           <Route
             path="/organizer/competitions/:competitionId/analytics"
             element={<ProtectedRoute><Analytics /></ProtectedRoute>}
+          />
+          <Route
+            path="/report"
+            element={<ProtectedRoute><ReportBug /></ProtectedRoute>}
           />
         </Routes>
       </BrowserRouter>
